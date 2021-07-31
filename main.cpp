@@ -5,6 +5,10 @@
 #include "Shader.h"
 #include "stb_image.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
@@ -16,6 +20,9 @@ float g = 0.3f;
 float b = 0.3f;
 float a = 1.0f;
 float mixValue = 0.2f;
+
+float transX = 0.5f;
+float transY = -0.5f;
 
 int main()
 {
@@ -47,10 +54,10 @@ int main()
 
 	float rec[] = {
 		// positions				// colors		//texture coords
-		 0.5f,  0.5f, 0.0f,		1.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		 0.5f, -0.5f, 0.0f,		0.0f, 1.0f, 0.0f,	1.0f, 0.0f,
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,	0.0f, 0.0f,
-		-0.5f,  0.5f, 0.0f,		1.0f, 1.0f, 0.0f,	0.0f, 1.0f
+		 0.5f,  0.5f, 0.0f,		/*1.0f, 0.0f, 0.0f,*/	1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,		/*0.0f, 1.0f, 0.0f,*/	1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		/*0.0f, 0.0f, 1.0f,*/	0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,		/*1.0f, 1.0f, 0.0f,*/	0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
@@ -71,14 +78,14 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	/*glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);*/
 
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 
 	unsigned int texture1, texture2;
@@ -133,6 +140,11 @@ int main()
 	
 	ourShader.setFloat("mixValue", 0.2f);
 
+	
+
+	
+	//glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(same));
+
 	while (!glfwWindowShouldClose(window))
 	{
 		processInput(window);
@@ -145,12 +157,33 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
 
+		glm::mat4 trans = glm::mat4(1.0f);
+
+		trans = glm::translate(trans, glm::vec3(transX, transY, 0.0f));
+		trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+		trans = glm::rotate(trans,  (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+
+		unsigned int transformLoc = glGetUniformLocation(ourShader.ID, "transform");
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &trans[0][0]);
+
 		ourShader.use();
 
 		ourShader.setFloat("mixValue", mixValue);
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
+
+		trans = glm::mat4(1.0f);
+
+		trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+		trans = glm::scale(trans, glm::vec3( sin(glfwGetTime()), sin(glfwGetTime()), sin(glfwGetTime())));
+		
+		glUniformMatrix4fv(transformLoc, 1, GL_FALSE, &trans[0][0]);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -173,28 +206,54 @@ void processInput(GLFWwindow* window)
 
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 	{
-		mixValue += 0.01;
-		/*r = 0.5f;
-		g = 0.1f;
-		b = 0.1f;*/
+		
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			transY += 0.05;
+		} 
+		else
+		{
+			transY += 0.01;
+		}
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 	{
-		mixValue -= 0.01;
-		/*r = 0.2f;
-		g = 0.3f;
-		b = 0.3f;*/
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			transY -= 0.05;
+		}
+		else
+		{
+			transY -= 0.01;
+		}
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			transX -= 0.05;
+		}
+		else
+		{
+			transX -= 0.01;
+		}
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			transX += 0.05;
+		}
+		else
+		{
+			transX += 0.01;
+		}
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+	{
+		transX = 0.0;
+		transY = 0.1;
 	}
 }
 
