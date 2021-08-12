@@ -1,28 +1,35 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
-#include <iostream>
-#include "Shader.h"
 #include "stb_image.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "shader.h"
+#include "camera.h"
+
+#include <iostream>
+
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
+//settings
 const unsigned int SRC_WIDTH = 800;
 const unsigned int SRC_HEIGHT = 600;
 
-float r = 0.2f;
-float g = 0.3f;
-float b = 0.3f;
-float a = 1.0f;
-float mixValue = 0.2f;
+//camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+float lastX = SRC_WIDTH / 2.0f;
+float lastY = SRC_HEIGHT / 2.0f;
+bool firstMouse = true;
 
-float viewX, viewY = 0.0f;
-float viewZ = -3.0f;
+//timing
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 int main()
 {
@@ -45,6 +52,10 @@ int main()
 
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	//glad: OpenGl Pointer Funktionen
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -52,6 +63,8 @@ int main()
 		std::cout << "Oh noez: GLAD" << std::endl;
 		return -1;
 	}
+
+	glEnable(GL_DEPTH_TEST);
 
 	//Shader bauen
 	Shader ourShader("shader.vert", "shader.frag");
@@ -186,21 +199,19 @@ int main()
 	ourShader.use();
 	ourShader.setInt("texture1", 0);
 	ourShader.setInt("texture2", 1);
-	
-	ourShader.setFloat("mixValue", 0.2f);
-
-	glEnable(GL_DEPTH_TEST);
-
-	/*glm::mat4 view;
-	view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f),
-					   glm::vec3(0.0f, 0.0f, 0.0f),
-					   glm::vec3(0.0f, 1.0f, 0.0f));*/
-
 
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		processInput(window);
 
+		float r = 0.2f;
+		float g = 0.3f;
+		float b = 0.3f;
+		float a = 1.0f;
 		glClearColor(r, g, b, a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -211,16 +222,12 @@ int main()
 
 		ourShader.use();
 
-		ourShader.setFloat("mixValue", mixValue);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SRC_WIDTH / (float)SRC_HEIGHT, 0.1f, 100.0f);
+		ourShader.setMat4("projection", projection);
 
-		glm::mat4 view = glm::mat4(1.0f);
-		view = glm::translate(view, glm::vec3(viewX, viewY, viewZ));
-
-		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
+		glm::mat4 view = camera.GetViewMatrix();
+		ourShader.setMat4("view", view);
 		
-
 		glBindVertexArray(VAO);
 
 		for (unsigned int i = 0; i < 10; i++)
@@ -244,12 +251,6 @@ int main()
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
-		ourShader.setMat4("view", view);
-		ourShader.setMat4("projection", projection);
-
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
@@ -263,82 +264,58 @@ int main()
 
 void processInput(GLFWwindow* window)
 {
+
+	
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		camera.ProcessKeyboard(SPRINT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
+		camera.ProcessKeyboard(WALK, deltaTime);
+
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			viewZ += 0.05;
-		} 
-		else
-		{
-			viewZ += 0.01;
-		}
-	}
-
+		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			viewZ -= 0.05;
-		}
-		else
-		{
-			viewZ -= 0.01;
-		}
-	}
-
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			viewX += 0.05;
-		}
-		else
-		{
-			viewX += 0.01;
-		}
-	}
-
+		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-			viewX -= 0.05;
-		}
-		else
-		{
-			viewX -= 0.01;
-		}
-	}
-
+		camera.ProcessKeyboard(RIGHT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-	{
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		{
-			viewY -= 0.05;
-		}
-		else
-		{
-			viewY -= 0.01f;
-		}
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)	
-	{
-		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-		{
-			viewY += 0.05;
-		}
-		else
-		{
-			viewY += 0.01f;
-		}
-	}
+		camera.ProcessKeyboard(UP, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+		camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+
+	lastX = xpos;
+	lastY = ypos;
+
+	camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.ProcessMouseScroll(yoffset);
 }
