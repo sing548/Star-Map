@@ -13,6 +13,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shaderdateien">
+      <UniqueIdentifier>{cf279fd2-e2d0-483f-bf0a-dbed8c97cdd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaderdateien\Vertex">
+      <UniqueIdentifier>{8703d737-1bb3-41ab-ac78-f312ec5f8bb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaderdateien\Fragment">
+      <UniqueIdentifier>{44485dc6-66bd-48e2-a4b8-f9e70343ebaa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,10 +47,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.vert">
-      <Filter>Ressourcendateien</Filter>
+      <Filter>Shaderdateien\Vertex</Filter>
     </None>
-    <None Include="shader.frag">
-      <Filter>Ressourcendateien</Filter>
+    <None Include="colors.vert">
+      <Filter>Shaderdateien\Vertex</Filter>
+    </None>
+    <None Include="colors.frag">
+      <Filter>Shaderdateien\Fragment</Filter>
+    </None>
+    <None Include="light.frag">
+      <Filter>Shaderdateien\Fragment</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +64,12 @@
       <Filter>Ressourcendateien</Filter>
     </Image>
     <Image Include="resources\textures\awesomeface.png">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="resources\textures\container2.png">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="resources\textures\container2_specular.png">
       <Filter>Ressourcendateien</Filter>
     </Image>
   </ItemGroup>
