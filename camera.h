@@ -15,15 +15,17 @@ enum Camera_Input {
 	UP,
 	DOWN,
 	SPRINT,
+	JOG,
 	WALK
 };
 
 const float YAW			= -90.0f;
 const float PITCH		= 0.0f;
-const float SPEED		= 2.5f;
+const float SPEED		= 5.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM		= 45.0f;
 const bool SPRINTING	= false;
+const bool JOGGING		= false;
 
 class Camera
 {
@@ -41,8 +43,9 @@ public:
 	float Zoom;
 
 	bool Sprinting;
+	bool Jogging;
 
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING)
+	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING), Jogging(JOGGING)
 	{
 		Position = position;
 		WorldUp = up;
@@ -51,7 +54,7 @@ public:
 		updateCameraVectors();
 	}
 
-	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING)
+	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING), Jogging(JOGGING)
 	{
 		Position = glm::vec3(posX, posY, posZ);
 		WorldUp = glm::vec3(upX, upY, upZ);
@@ -71,13 +74,27 @@ public:
 		glm::vec3 oldPos = Position;
 
 		if (input == SPRINT)
+		{
 			Sprinting = true;
-		if (input == WALK)
+			Jogging = false;
+		}
+
+		if (input == JOG)
+		{
 			Sprinting = false;
+			Jogging = true;
+		}
+		if (input == WALK)
+		{
+			Sprinting = false;
+			Jogging = false;
+		}
 
 		float velocity;
 		if (Sprinting)
-			velocity = MovementSpeed * deltaTime * 3.0f;
+			velocity = MovementSpeed * deltaTime * 50.0f;
+		else if (Jogging)
+			velocity = MovementSpeed * deltaTime * 10.0f;
 		else
 			velocity = MovementSpeed * deltaTime;
 		if (input == FORWARD)

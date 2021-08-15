@@ -44,6 +44,18 @@
     <ClInclude Include="camera.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="model_loading.vert">
+      <Filter>Shaderdateien\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="journal_reader.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.vert">
@@ -56,6 +68,9 @@
       <Filter>Shaderdateien\Fragment</Filter>
     </None>
     <None Include="light.frag">
+      <Filter>Shaderdateien\Fragment</Filter>
+    </None>
+    <None Include="model_loading.frag">
       <Filter>Shaderdateien\Fragment</Filter>
     </None>
   </ItemGroup>
