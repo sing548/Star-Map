@@ -78,8 +78,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>E:\src\OpenGL\glm;E:\src\OpenGL\includes;$(SolutionDir)/External Libraries/assimp/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)/External Libraries/assimp/lib;E:\src\OpenGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)/External Libraries/glm;$(SolutionDir)/External Libraries/opengl/includes;$(SolutionDir)/External Libraries/assimp/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)/External Libraries/assimp/lib;$(SolutionDir)/External Libraries/opengl/lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -157,6 +157,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Header.h" />
+    <ClInclude Include="OpenVRPart.h" />
+    <ClInclude Include="screen.frag" />
+    <ClInclude Include="screen.vert" />
     <ClInclude Include="journal_reader.h" />
     <ClInclude Include="model_loading.vert" />
     <ClInclude Include="mesh.h" />
