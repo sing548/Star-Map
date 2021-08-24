@@ -12,8 +12,24 @@
 
 namespace fs = std::filesystem;
 
+enum StarClass {
+	O,
+	B,
+	A,
+	F,
+	G,
+	K,
+	L,
+	M,
+	T,
+	Y,
+	D,
+	GENERIC
+};
+
 struct Coordinate {
 	std::string name;
+	StarClass starClass;
 	glm::vec3 coords;
 };
 
@@ -55,27 +71,64 @@ private:
 
 
 				rapidjson::Value& v = doc["event"];
-
 				string event(v.GetString());
 
-				if (event == "FSDJump")
+				
+
+				if (event == "StartJump")
+				{
+					rapidjson::Value& t = doc["JumpType"];
+					string jType(t.GetString());
+
+					if (jType == "Hyperspace")
+					{
+						string sSystem = doc["StarSystem"].GetString();
+
+						std::vector<Coordinate>::iterator i = std::find_if(mVisitedCoordinates.begin(), mVisitedCoordinates.end(), [&](const auto& val) { return val.name == sSystem; });
+
+						if (i == mVisitedCoordinates.end())
+						{
+							Coordinate c;
+
+							c.name = sSystem;
+							c.starClass = EvaluateStarClass(doc["StarClass"].GetString());
+
+							mVisitedCoordinates.push_back(c);
+						}
+					}
+				}
+				else if (event == "FSDJump")
 				{
 					rapidjson::Value& posArr = doc["StarPos"];
+					string sSystem = doc["StarSystem"].GetString();
 
-					Coordinate c;
 
-					c.name = doc["StarSystem"].GetString();
-					c.coords.x = posArr[0].GetFloat() / 10;
-					c.coords.y = posArr[1].GetFloat() / 10;
-					c.coords.z = posArr[2].GetFloat() / 10;
+					std::vector<Coordinate>::iterator i = std::find_if(mVisitedCoordinates.begin(), mVisitedCoordinates.end(), [&](const auto& val) { return val.name == sSystem; });
 
-					mVisitedCoordinates.push_back(c);
+					if (i != mVisitedCoordinates.end())
+					{
+						Coordinate& c = *i;
 
-					cout << "System: " << c.name << ", x: " << c.coords.x << ", y: " << c.coords.y << ", z: " << c.coords.z << endl;
+						c.coords.x = posArr[0].GetFloat() / 10;
+						c.coords.y = posArr[1].GetFloat() / 10;
+						c.coords.z = posArr[2].GetFloat() / 10;
+						cout << "System: " << c.name << ", StarClass: " << c.starClass << ", x: " << c.coords.x << ", y: " << c.coords.y << ", z: " << c.coords.z << endl;
+					}
+					else
+					{
+						Coordinate c;
+						c.name = sSystem;
+						c.coords.x = posArr[0].GetFloat() / 10;
+						c.coords.y = posArr[1].GetFloat() / 10;
+						c.coords.z = posArr[2].GetFloat() / 10;
+						mVisitedCoordinates.push_back(c);
+						cout << "System: " << c.name << ", StarClass: Unknown, " << ", x: " << c.coords.x << ", y: " << c.coords.y << ", z: " << c.coords.z << endl;
+					}
 				}
 			}
 		}
 	}
+
 	std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) {
 		size_t start_pos = 0;
 		while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
@@ -84,6 +137,7 @@ private:
 		}
 		return str;
 	}
+
 	bool hasEnding(std::string const& fullString, std::string const& ending)
 	{
 		if (fullString.length() >= ending.length())
@@ -93,5 +147,72 @@ private:
 		else
 			return false;
 	}
-};
 
+	StarClass EvaluateStarClass(std::string classString)
+	{
+		if (classString == "O")
+		{
+			return StarClass::O;
+		}
+		else if (classString == "B")
+		{
+			return StarClass::B;
+		}
+		else if (classString == "A")
+		{
+			return StarClass::A;
+		}
+		else if (classString == "F")
+		{
+			return StarClass::F;
+		}
+		else if (classString == "G")
+		{
+			return StarClass::G;
+		}
+		else if (classString == "K")
+		{
+			return StarClass::K;
+		}
+		else if (classString == "L")
+		{
+			return StarClass::L;
+		}
+		else if (classString == "M")
+		{
+			return StarClass::M;
+		}
+		else if (classString == "T")
+		{
+			return StarClass::T;
+		}
+		else if (classString == "TTS")
+		{
+			return StarClass::GENERIC;
+		}
+		else if (classString == "Y")
+		{
+			return StarClass::Y;
+		}
+		else if (classString == "D" || classString == "DA" || classString == "DAZ" || classString == "DC" || classString == "DQ" || classString == "DAB")
+		{
+			return StarClass::D;
+		}
+		else if (classString == "N")
+		{
+			return StarClass::GENERIC;
+		}
+		else if (classString == "SupermassiveBlackHole")
+		{
+			return StarClass::GENERIC;
+		}
+		else if (classString == "H")
+		{
+			return StarClass::GENERIC;
+		}
+		else
+		{
+			return StarClass::GENERIC;
+		}
+	}
+};

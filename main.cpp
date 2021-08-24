@@ -23,7 +23,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 void drawOutput(glm::vec4 backgroundColor, Shader shader, JournalReader jR, Model loadedModel);
-void drawOutputToTexture(glm::vec4 backgroundColor, Shader shader, Shader screenShader, JournalReader jR, Model loadedModel, unsigned int framebuffer, unsigned int textColorBuffer, unsigned int quadVAO);
+void drawOutputToTexture(glm::vec4 backgroundColor, Shader shader, Shader screenShader, JournalReader jR, unsigned int framebuffer, unsigned int textColorBuffer, unsigned int quadVAO);
+glm::mat4 toGLM(const vr::HmdMatrix34_t& m);
+void drawCorrectStarModel(Coordinate c, Shader shader);
 
 //settings
 const unsigned int SRC_WIDTH = 2560;
@@ -39,7 +41,19 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-
+Model genericStarModel		;//= Model("resources/models/stars/generic_star/star.obj");
+Model classASpotlessModel	;//= Model("resources/models/stars/a_spotless/a_spotless.obj");
+Model classASpotsModel		;//= Model("resources/models/stars/a_with_spotls/a_with_spots.obj");
+Model classBModel			;//= Model("resources/models/stars/b/b.obj");
+Model classFModel			;//= Model("resources/models/stars/f/f.obj");
+Model classGModel			;//= Model("resources/models/stars/g/g.obj");
+Model classKModel			;//= Model("resources/models/stars/k/k.obj");
+Model classLModel			;//= Model("resources/models/stars/l/l.obj");
+Model classMModel			;//= Model("resources/models/stars/m/m.obj");
+Model classOModel			;//= Model("resources/models/stars/o/o.obj");
+Model classTModel			;//= Model("resources/models/stars/t/t.obj");
+Model wolfRayetModel		;//= Model("resources/models/stars/wolf_rayet/wolf_rayet.obj");
+Model classYModel			;//= Model("resources/models/stars/y/y.obj");
 
 int main()
 {
@@ -51,7 +65,7 @@ int main()
 	glfwSetErrorCallback(error_callback);
 
 	JournalReader jR = JournalReader();
-	//jR.readAllJounals("C:\\Users\\dario\\Saved Games\\Frontier Developments\\Elite Dangerous");
+	jR.readAllJounals("C:\\Users\\dario\\Saved Games\\Frontier Developments\\Elite Dangerous");
 
 	//GLFW Fenster (zum Gucken!)
 	GLFWwindow* window;
@@ -59,6 +73,8 @@ int main()
 	//OpenVRPart vrPart;
 	//window = glfwCreateWindow(vrPart.rtWidth, vrPart.rtHeight, "Hello OpenVR", NULL, NULL);
 	window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "HelloWindow", glfwGetPrimaryMonitor(), NULL);
+	//window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "HelloWindow", NULL, NULL);
+	
 
 	if (window == NULL)
 	{
@@ -90,13 +106,23 @@ int main()
 	Shader screenShader("screen.vert", "screen.frag");
 
 	// Model laden
-	Model loadedModel("resources/models/generic_star/star.obj");
+	genericStarModel = Model("resources/models/stars/generic_star/star.obj");
+	classASpotlessModel = Model("resources/models/stars/a_spotless/a_spotless.obj");
+	classASpotsModel	= Model("resources/models/stars/a_with_spotls/a_with_spots.obj");
+	classBModel			= Model("resources/models/stars/b/b.obj");
+	classFModel			= Model("resources/models/stars/f/f.obj");
+	classGModel			= Model("resources/models/stars/g/g.obj");
+	classKModel			= Model("resources/models/stars/k/k.obj");
+	classLModel			= Model("resources/models/stars/l/l.obj");
+	classMModel			= Model("resources/models/stars/m/m.obj");
+	classOModel			= Model("resources/models/stars/o/o.obj");
+	classTModel			= Model("resources/models/stars/t/t.obj");
+	wolfRayetModel		= Model("resources/models/stars/wolf_rayet/wolf_rayet.obj");
+	classYModel			= Model("resources/models/stars/y/y.obj");
 
 	glm::vec4 backgroundRGBA = glm::vec4(0.01f, 0.01f, 0.01f, 1.00f);
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	
 	
 	float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
 		// positions   // texCoords
@@ -153,7 +179,7 @@ int main()
 
 		processInput(window);
 		//drawOutput(backgroundRGBA, ourShader, jR, loadedModel);
-		drawOutputToTexture(backgroundRGBA, ourShader, screenShader, jR, loadedModel, framebuffer, textureColorbuffer, quadVAO);
+		drawOutputToTexture(backgroundRGBA, ourShader, screenShader, jR, framebuffer, textureColorbuffer, quadVAO);
 
 		//vrPart.submitFramesToOpenVR(result, result);
 
@@ -165,7 +191,7 @@ int main()
 	return 0;
 }
 
-void drawOutput(glm::vec4 backgroundColor, Shader shader, JournalReader jR, Model loadedModel)
+void drawOutput(glm::vec4 backgroundColor, Shader shader, JournalReader jR)
 {
 	glClearColor(backgroundColor.x, backgroundColor.y, backgroundColor.z, backgroundColor.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -190,10 +216,10 @@ void drawOutput(glm::vec4 backgroundColor, Shader shader, JournalReader jR, Mode
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	shader.setMat4("model", model);
-	loadedModel.Draw(shader);
+	genericStarModel.Draw(shader);
 }
 
-void drawOutputToTexture(glm::vec4 backgroundColor, Shader shader, Shader screenShader, JournalReader jR, Model loadedModel, unsigned int framebuffer, unsigned int textColorBuffer, unsigned int quadVAO)
+void drawOutputToTexture(glm::vec4 backgroundColor, Shader shader, Shader screenShader, JournalReader jR, unsigned int framebuffer, unsigned int textColorBuffer, unsigned int quadVAO)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 	glEnable(GL_DEPTH_TEST);
@@ -208,20 +234,20 @@ void drawOutputToTexture(glm::vec4 backgroundColor, Shader shader, Shader screen
 	shader.setMat4("projection", projection);
 	shader.setMat4("view", view);
 
-	/*for (unsigned int i = 0; i < jR.mVisitedCoordinates.size(); i++)
+	for (unsigned int i = 0; i < jR.mVisitedCoordinates.size(); i++)
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, jR.mVisitedCoordinates[i].coords);
 		model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
 		shader.setMat4("model", model);
-		loadedModel.Draw(shader);
-	}*/
+		drawCorrectStarModel(jR.mVisitedCoordinates[i], shader);
+	}
 
-	glm::mat4 model = glm::mat4(1.0f);
+	/*glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	shader.setMat4("model", model);
-	loadedModel.Draw(shader);
+	loadedModel.Draw(shader);*/
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
@@ -247,6 +273,8 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(SPRINT, deltaTime);
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 		camera.ProcessKeyboard(JOG, deltaTime);
+	else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+		camera.ProcessKeyboard(CRAWL, deltaTime);
 	
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE && glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE)
 		camera.ProcessKeyboard(WALK, deltaTime);
@@ -336,4 +364,26 @@ unsigned int loadTexture(char const* path)
 	}
 
 	return textureID;
+}
+
+void drawCorrectStarModel(Coordinate c, Shader shader)
+{
+	switch (c.starClass)
+	{
+		case StarClass::O: classOModel.Draw(shader); break;
+		case StarClass::B: classBModel.Draw(shader); break;
+		case StarClass::A: 
+		{
+			classASpotsModel.Draw(shader); break;
+		}
+		case StarClass::F: classFModel.Draw(shader); break;
+		case StarClass::G: classGModel.Draw(shader); break;
+		case StarClass::K: classKModel.Draw(shader); break;
+		case StarClass::L: classLModel.Draw(shader); break;
+		case StarClass::M: classMModel.Draw(shader); break;
+		case StarClass::T: classTModel.Draw(shader); break;
+		case StarClass::Y: classYModel.Draw(shader); break;
+		case StarClass::D: wolfRayetModel.Draw(shader); break;
+		case StarClass::GENERIC: classASpotsModel.Draw(shader); break;
+	}
 }

@@ -16,7 +16,8 @@ enum Camera_Input {
 	DOWN,
 	SPRINT,
 	JOG,
-	WALK
+	WALK,
+	CRAWL
 };
 
 const float YAW			= -90.0f;
@@ -26,6 +27,7 @@ const float SENSITIVITY = 0.1f;
 const float ZOOM		= 45.0f;
 const bool SPRINTING	= false;
 const bool JOGGING		= false;
+const bool CRAWLING		= false;
 
 class Camera
 {
@@ -44,8 +46,9 @@ public:
 
 	bool Sprinting;
 	bool Jogging;
+	bool Crawling;
 
-	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING), Jogging(JOGGING)
+	Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING), Jogging(JOGGING), Crawling(CRAWLING)
 	{
 		Position = position;
 		WorldUp = up;
@@ -54,7 +57,7 @@ public:
 		updateCameraVectors();
 	}
 
-	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING), Jogging(JOGGING)
+	Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM), Sprinting(SPRINTING), Jogging(JOGGING), Crawling(CRAWLING)
 	{
 		Position = glm::vec3(posX, posY, posZ);
 		WorldUp = glm::vec3(upX, upY, upZ);
@@ -77,17 +80,28 @@ public:
 		{
 			Sprinting = true;
 			Jogging = false;
+			Crawling = false;
 		}
 
 		if (input == JOG)
 		{
 			Sprinting = false;
 			Jogging = true;
+			Crawling = false;
 		}
+
 		if (input == WALK)
 		{
 			Sprinting = false;
 			Jogging = false;
+			Crawling = false;
+		}
+
+		if (input == CRAWL)
+		{
+			Sprinting = false;
+			Jogging = false;
+			Crawling = true;
 		}
 
 		float velocity;
@@ -95,12 +109,14 @@ public:
 			velocity = MovementSpeed * deltaTime * 50.0f;
 		else if (Jogging)
 			velocity = MovementSpeed * deltaTime * 10.0f;
+		else if (Crawling)
+			velocity = MovementSpeed * deltaTime * 0.1f;
 		else
 			velocity = MovementSpeed * deltaTime;
 		if (input == FORWARD)
-			Position += Front * velocity;
+			Position += glm::normalize(glm::vec3(Front.x, 0.0f, Front.z)) * velocity;
 		if (input == BACKWARD)
-			Position -= Front * velocity;
+			Position -= glm::normalize(glm::vec3(Front.x, 0.0f, Front.z)) * velocity;
 		if (input == LEFT)
 			Position -= Right * velocity;
 		if (input == RIGHT)
@@ -109,9 +125,9 @@ public:
 		Position.y = oldPos.y;
 
 		if (input == UP)
-			Position += Up * velocity;
+			Position += WorldUp * velocity;
 		if (input == DOWN)
-			Position -= Up * velocity;
+			Position -= WorldUp * velocity;
 	}
 
 	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
