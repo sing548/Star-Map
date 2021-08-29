@@ -56,17 +56,14 @@
     <ClInclude Include="journal_reader.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Header.h">
-      <Filter>Quelldateien</Filter>
-    </ClInclude>
     <ClInclude Include="screen.vert">
       <Filter>Shaderdateien\Vertex</Filter>
     </ClInclude>
-    <ClInclude Include="screen.frag">
-      <Filter>Shaderdateien\Fragment</Filter>
-    </ClInclude>
     <ClInclude Include="OpenVRPart.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.frag">
+      <Filter>Shaderdateien\Fragment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -43,7 +43,7 @@ float lastFrame = 0.0f;
 
 Model genericStarModel		;//= Model("resources/models/stars/generic_star/star.obj");
 Model classASpotlessModel	;//= Model("resources/models/stars/a_spotless/a_spotless.obj");
-Model classASpotsModel		;//= Model("resources/models/stars/a_with_spotls/a_with_spots.obj");
+Model classASpotsModel		;//= Model("resources/models/stars/a_with_spots/a_with_spots.obj");
 Model classBModel			;//= Model("resources/models/stars/b/b.obj");
 Model classFModel			;//= Model("resources/models/stars/f/f.obj");
 Model classGModel			;//= Model("resources/models/stars/g/g.obj");
@@ -72,8 +72,8 @@ int main()
 
 	//OpenVRPart vrPart;
 	//window = glfwCreateWindow(vrPart.rtWidth, vrPart.rtHeight, "Hello OpenVR", NULL, NULL);
-	window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "HelloWindow", glfwGetPrimaryMonitor(), NULL);
-	//window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "HelloWindow", NULL, NULL);
+	//window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "HelloWindow", glfwGetPrimaryMonitor(), NULL);
+	window = glfwCreateWindow(SRC_WIDTH, SRC_HEIGHT, "HelloWindow", NULL, NULL);
 	
 
 	if (window == NULL)
@@ -106,9 +106,9 @@ int main()
 	Shader screenShader("screen.vert", "screen.frag");
 
 	// Model laden
-	genericStarModel = Model("resources/models/stars/generic_star/star.obj");
+	genericStarModel    = Model("resources/models/stars/generic_star/star.obj");
 	classASpotlessModel = Model("resources/models/stars/a_spotless/a_spotless.obj");
-	classASpotsModel	= Model("resources/models/stars/a_with_spotls/a_with_spots.obj");
+	classASpotsModel	= Model("resources/models/stars/a_with_spots/a_with_spots.obj");
 	classBModel			= Model("resources/models/stars/b/b.obj");
 	classFModel			= Model("resources/models/stars/f/f.obj");
 	classGModel			= Model("resources/models/stars/g/g.obj");
@@ -247,7 +247,7 @@ void drawOutputToTexture(glm::vec4 backgroundColor, Shader shader, Shader screen
 	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
 	shader.setMat4("model", model);
-	loadedModel.Draw(shader);*/
+	classASpotsModel.Draw(shader);*/
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glDisable(GL_DEPTH_TEST);
