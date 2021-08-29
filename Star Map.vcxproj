@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{7e312eec-8de2-426f-9afe-f454eeb2555f}</ProjectGuid>
-    <RootNamespace>CreatingAWindow</RootNamespace>
+    <RootNamespace>StarMap</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>Star Map</ProjectName>
   </PropertyGroup>
