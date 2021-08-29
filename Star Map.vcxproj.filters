@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="glad.c">
+      <Filter>Codefiles</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Codefiles</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Codefiles</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="model_loading.vert">
+      <Filter>Shaderdateien\Vertexshader</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.vert">
+      <Filter>Shaderdateien\Vertexshader</Filter>
+    </ClInclude>
+    <ClInclude Include="screen.frag">
+      <Filter>Shaderdateien\Fragmentshader</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+    <ClInclude Include="journal_reader.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenVRPart.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Headerfiles</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\awesomeface.png">
+      <Filter>Resourcdateien</Filter>
+    </Image>
+    <Image Include="resources\textures\container.jpg">
+      <Filter>Resourcdateien</Filter>
+    </Image>
+    <Image Include="resources\textures\container2.png">
+      <Filter>Resourcdateien</Filter>
+    </Image>
+    <Image Include="resources\textures\container2_specular.png">
+      <Filter>Resourcdateien</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="colors.vert">
+      <Filter>Shaderdateien\Vertexshader</Filter>
+    </None>
+    <None Include="model_loading.frag">
+      <Filter>Shaderdateien\Fragmentshader</Filter>
+    </None>
+    <None Include="shader.vert">
+      <Filter>Shaderdateien\Vertexshader</Filter>
+    </None>
+    <None Include="light.frag">
+      <Filter>Shaderdateien\Fragmentshader</Filter>
+    </None>
+    <None Include="colors.frag">
+      <Filter>Shaderdateien\Fragmentshader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaderdateien">
+      <UniqueIdentifier>{6781c783-d033-485d-a9d2-43521eedb37b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaderdateien\Vertexshader">
+      <UniqueIdentifier>{8d7d4d26-36eb-4cd3-add8-04f5287b9262}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaderdateien\Fragmentshader">
+      <UniqueIdentifier>{f9cec284-20e4-400a-a013-3667627ede66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resourcdateien">
+      <UniqueIdentifier>{1250d0f4-b455-41e8-ac28-e19e858f10d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerfiles">
+      <UniqueIdentifier>{f20d0a34-b9ba-41bf-a9c9-b927384e0418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Codefiles">
+      <UniqueIdentifier>{f0259991-dae6-4769-8085-2507613a24a9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
