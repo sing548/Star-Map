@@ -2,95 +2,95 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="glad.c">
-      <Filter>Codefiles</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Codefiles</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stb_image.cpp">
-      <Filter>Codefiles</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model_loading.vert">
-      <Filter>Shaderfiles\Vertexshader</Filter>
+      <Filter>Shader Files\Vertexshader</Filter>
     </ClInclude>
     <ClInclude Include="screen.vert">
-      <Filter>Shaderfiles\Vertexshader</Filter>
+      <Filter>Shader Files\Vertexshader</Filter>
     </ClInclude>
     <ClInclude Include="screen.frag">
-      <Filter>Shaderfiles\Fragmentshader</Filter>
+      <Filter>Shader Files\Fragmentshader</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="journal_reader.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OpenVRPart.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Headerfiles</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\awesomeface.png">
-      <Filter>Resourcefiles</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\textures\container.jpg">
-      <Filter>Resourcefiles</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\textures\container2.png">
-      <Filter>Resourcefiles</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\textures\container2_specular.png">
-      <Filter>Resourcefiles</Filter>
+      <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="colors.vert">
-      <Filter>Shaderfiles\Vertexshader</Filter>
+      <Filter>Shader Files\Vertexshader</Filter>
     </None>
     <None Include="model_loading.frag">
-      <Filter>Shaderfiles\Fragmentshader</Filter>
+      <Filter>Shader Files\Fragmentshader</Filter>
     </None>
     <None Include="shader.vert">
-      <Filter>Shaderfiles\Vertexshader</Filter>
+      <Filter>Shader Files\Vertexshader</Filter>
     </None>
     <None Include="light.frag">
-      <Filter>Shaderfiles\Fragmentshader</Filter>
+      <Filter>Shader Files\Fragmentshader</Filter>
     </None>
     <None Include="colors.frag">
-      <Filter>Shaderfiles\Fragmentshader</Filter>
+      <Filter>Shader Files\Fragmentshader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Headerfiles">
-      <UniqueIdentifier>{f20d0a34-b9ba-41bf-a9c9-b927384e0418}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Codefiles">
+    <Filter Include="Source Files">
       <UniqueIdentifier>{f0259991-dae6-4769-8085-2507613a24a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resourcefiles">
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{f20d0a34-b9ba-41bf-a9c9-b927384e0418}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
       <UniqueIdentifier>{1250d0f4-b455-41e8-ac28-e19e858f10d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaderfiles">
+    <Filter Include="Shader Files">
       <UniqueIdentifier>{6781c783-d033-485d-a9d2-43521eedb37b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaderfiles\Vertexshader">
+    <Filter Include="Shader Files\Vertexshader">
       <UniqueIdentifier>{8d7d4d26-36eb-4cd3-add8-04f5287b9262}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaderfiles\Fragmentshader">
+    <Filter Include="Shader Files\Fragmentshader">
       <UniqueIdentifier>{f9cec284-20e4-400a-a013-3667627ede66}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
